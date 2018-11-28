@@ -7,3 +7,5 @@ The [hyperHTML](https://github.com/WebReflection/hyperHTML#hyperhtml)'s template
   * CDN as global utility, via https://unpkg.com/@ungap/domtagger
   * ESM via `import domtagger from '@ungap/domtagger'`
   * CJS via `const domtagger = require('@ungap/domtagger')`
+
+[Live test](https://ungap.github.io/is-array/test/)
