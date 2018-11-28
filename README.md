@@ -8,7 +8,7 @@ The [hyperHTML](https://github.com/WebReflection/hyperHTML#hyperhtml)'s template
   * ESM via `import domtagger from 'domtagger'`
   * CJS via `const domtagger = require('domtagger')`
 
-[Live test](https://WebReflection.github.io/is-array/test/)
+[Live test](https://webreflection.github.io/domtagger/test/)
 
 ### Example
 
