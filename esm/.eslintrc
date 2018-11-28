@@ -1,0 +1,14 @@
+{
+  "extends": "eslint:recommended",
+  "globals": {
+    "DocumentFragment": true,
+    "document": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-case-declarations": 0,
+    "no-fallthrough": 0
+  }
+}

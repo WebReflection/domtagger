@@ -1,0 +1,100 @@
+{
+  "name": "domtagger",
+  "version": "0.0.0",
+  "description": "The hyperHTML's template literal parser",
+  "main": "cjs/index.js",
+  "module": "esm/index.js",
+  "unpkg": "min.js",
+  "scripts": {
+    "$": "npm-dollar",
+    "build": "npm run $ build",
+    "bundle": "npm run $ bundle",
+    "coveralls": "coveralls",
+    "test": "istanbul cover test/index.js"
+  },
+  "$": {
+    "bundle": {
+      "max": [
+        "rollup --config rollup.config.js",
+        "$ clean.esm"
+      ],
+      "min": [
+        [
+          "echo \"/*! (c) Andrea Giammarchi - ISC */$(",
+          "uglifyjs index.js --support-ie8 -c -m",
+          ")\" > min.js"
+        ]
+      ],
+      "umd": [
+        [
+          "echo \"(function(A,G){if(typeof define=='function'&&define.amd)define([],G);else",
+          "if(typeof module=='object'&&module.exports)module.exports=G();else",
+          "A.domtagger=G()}(typeof self!='undefined'?self:this,function(){\">umd.js;cat",
+          "min.js>>umd.js;echo \"return domtagger}));\">>umd.js"
+        ]
+      ],
+      "esm": [
+        "cp min.js esm.js",
+        "echo 'export default domtagger;' >> esm.js"
+      ]
+    },
+    "build": [
+      "$ cjs",
+      "$ clean.cjs index.js",
+      "$ clean.cjs utils.js",
+      "$ clean.cjs walker.js",
+      "$ bundle.max",
+      "$ bundle.min",
+      "$ bundle.umd",
+      "$ bundle.esm",
+      "$ size",
+      "npm run test"
+    ],
+    "clean": {
+      "cjs": "sed -i.bck 's/m.default : m/\\/* istanbul ignore next *\\/ m.default : \\/* istanbul ignore next *\\/ m/g' cjs/$1 && rm -f cjs/$1.bck",
+      "esm": [
+        [
+          "cat index.js |",
+          "sed 's/(exports)/(document)/' |",
+          "sed 's/return exports;/return domtagger;/' |",
+          "sed -e 's/exports.*;//g' |",
+          "sed 's/({})/(document)/' > index.clean"
+        ],
+        "mv index.clean index.js"
+      ]
+    },
+    "cjs": [
+      "ascjs ./esm ./cjs"
+    ],
+    "size": {
+      "gzip": [
+        [
+          "cat index.js |",
+          "wc -c;cat min.js |",
+          "wc -c;gzip -c9 min.js |",
+          "wc -c"
+        ]
+      ],
+      "brotli": "cat min.js | brotli | wc -c"
+    }
+  },
+  "keywords": [],
+  "author": "Andrea Giammarchi",
+  "license": "ISC",
+  "dependencies": {
+    "@ungap/create-content": "^0.1.0",
+    "@ungap/essential-map": "^0.1.7",
+    "@ungap/essential-symbol": "^0.1.0",
+    "@ungap/import-node": "^0.1.0",
+    "@ungap/trim": "^0.1.1",
+    "@ungap/weakmap": "^0.1.4"
+  },
+  "devDependencies": {
+    "basichtml": "^0.20.0",
+    "coveralls": "^3.0.2",
+    "istanbul": "^0.4.5",
+    "npm-dollar": "^2.1.3",
+    "rollup": "^0.67.3",
+    "rollup-plugin-node-resolve": "^3.4.0"
+  }
+}
