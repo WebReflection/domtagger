@@ -1,6 +1,5 @@
 'use strict';
 // globals
-const Symbol = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/essential-symbol'));
 const WeakMap = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/weakmap'));
 
 // utils
@@ -9,26 +8,13 @@ const importNode = (m => m.__esModule ? /* istanbul ignore next */ m.default : /
 
 // local
 const sanitize = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('./sanitizer.js'));
-const {slice} = require('./utils.js');
 const {find, parse} = require('./walker.js');
 
 // the domtagger 🎉
 Object.defineProperty(exports, '__esModule', {value: true}).default = domtagger;
 
-var update = Symbol();
-var updates = new WeakMap;
 var parsed = new WeakMap;
-
-Object.defineProperty(
-  // also known as DocumentFragment
-  document.createDocumentFragment().constructor.prototype,
-  update,
-  {
-    value: function () {
-      return updates.get(this).apply(this, arguments);
-    }
-  }
-);
+var referenced = new WeakMap;
 
 function createInfo(options, template) {
   var markup = sanitize(template);
@@ -40,38 +26,39 @@ function createInfo(options, template) {
   parse(content, holes, template.slice(0));
   var info = {
     content: content,
-    updates: function (fragment) {
-      var updates = [];
-      var i = 0;
+    updates: function (content) {
+      var callbacks = [];
       var len = holes.length;
+      var i = 0;
       while (i < len) {
         var info = holes[i++];
-        var node = find(fragment, info.path);
+        var node = find(content, info.path);
         switch (info.type) {
           case 'any':
-            updates.push(options.any(node, []));
+            callbacks.push(options.any(node, []));
             break;
           case 'attr':
-            updates.push(options.attribute(node, info.name, info.node));
+            callbacks.push(options.attribute(node, info.name, info.node));
             break;
           case 'text':
-            updates.push(options.text(node));
+            callbacks.push(options.text(node));
             node.textContent = '';
             break;
         }
       }
       return function () {
-        var i = 0;
         var length = arguments.length;
-        if (len !== length) {
+        var values = length - 1;
+        var i = 1;
+        if (len !== values) {
           throw new Error(
-            length + ' values instead of ' + len + '\n' +
+            values + ' values instead of ' + len + '\n' +
             template.join(', ')
           );
         }
         while (i < length)
-          updates[i](arguments[i++]);
-        return fragment;
+          callbacks[i - 1](arguments[i++]);
+        return content;
       };
     }
   };
@@ -79,11 +66,24 @@ function createInfo(options, template) {
   return info;
 }
 
+function createDetails(options, template) {
+  var info = parsed.get(template) || createInfo(options, template);
+  var content = importNode.call(document, info.content, true);
+  var details = {
+    content: content,
+    template: template,
+    updates: info.updates(content)
+  };
+  referenced.set(options, details);
+  return details;
+}
+
 function domtagger(options) {
   return function (template) {
-    var info = parsed.get(template) || createInfo(options, template);
-    var content = importNode.call(document, info.content, true);
-    updates.set(content, info.updates(content));
-    return content[update].apply(content, slice.apply(1, arguments));
+    var details = referenced.get(options);
+    if (details == null || details.template !== template)
+      details = createDetails(options, template);
+    details.updates.apply(null, arguments);
+    return details.content;
   };
 }

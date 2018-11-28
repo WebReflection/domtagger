@@ -1,11 +1,10 @@
 'use strict';
 const Map = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/essential-map'));
+const trim = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/trim'));
 
 const {
   UID, UIDC, COMMENT_NODE, DOCUMENT_FRAGMENT_NODE, ELEMENT_NODE, SHOULD_USE_TEXT_CONTENT, TEXT_NODE
 } = require('./constants.js');
-
-const {slice, trim} = require('./utils.js');
 
 exports.find = find;
 exports.parse = parse;
@@ -36,17 +35,17 @@ function createPath(node) {
 }
 
 function find(node, path) {
-  var i = 0;
   var length = path.length;
+  var i = 0;
   while (i < length)
     node = node.childNodes[path[i++]];
   return node;
 }
 
 function parse(node, paths, parts) {
-  var i = 0;
   var childNodes = node.childNodes;
   var length = childNodes.length;
+  var i = 0;
   while (i < length) {
     var child = childNodes[i++];
     switch (child.nodeType) {
@@ -88,10 +87,10 @@ function parse(node, paths, parts) {
 function parseAttributes(node, paths, parts) {
   var cache = new Map;
   var attributes = node.attributes;
-  var array = slice.apply(0, attributes);
   var remove = [];
-  var i = 0;
+  var array = remove.slice.call(attributes, 0);
   var length = array.length;
+  var i = 0;
   while (i < length) {
     var attribute = array[i++];
     if (attribute.value === UID) {
@@ -112,8 +111,8 @@ function parseAttributes(node, paths, parts) {
       remove.push(attribute);
     }
   }
-  i = 0;
   length = remove.length;
+  i = 0;
   while (i < length) {
     // Edge HTML bug #16878726
     var attr = remove[i++];
@@ -138,8 +137,8 @@ function parseAttributes(node, paths, parts) {
     // through template documents aren't worth executing
     // so it became this ... hopefully it won't hurt in the wild
     var script = document.createElement(nodeName);
-    i = 0;
     length = attributes.length;
+    i = 0;
     while (i < length)
       script.setAttributeNode(attributes[i++].cloneNode(true));
     script.textContent = node.textContent;

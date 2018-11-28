@@ -39,10 +39,8 @@ options.transform = function (html) {
 };
 
 var html = domtagger(options);
-content = html`
-<div onclick=${e => e.preventDefault()}>
-  <hr />
-</div>`;
+content = render();
+console.assert(content === render());
 
 console.assert(content.nodeType === 11);
 
@@ -61,3 +59,10 @@ delete require.cache[require.resolve('../cjs/sanitizer.js')];
 document.createElement = function () { return {}; };
 
 domtagger = require('../cjs').default;
+
+function render() {
+  return html`
+  <div onclick=${e => e.preventDefault()}>
+    <hr />
+  </div>`;
+}
