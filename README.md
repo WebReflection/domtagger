@@ -24,6 +24,7 @@ var html = domtagger({
 
   // how to handle attributes
   // Note: this callback is simplified for example purpose.
+  // The node is the attribute owner
   attribute: function (node, name, attribute) {
     return function (value) {
       var type = typeof value;
@@ -38,8 +39,10 @@ var html = domtagger({
 
   // how to handle generic content
   // Note: this callback is simplified for example purpose.
-  any: function (node, childNodes) {
-    var parentNode = node.parentNode;
+  // The comment node is the hole placeholder
+  // use domdiff or other techniques to handle nodes
+  any: function (comment, childNodes) {
+    var parentNode = comment.parentNode;
     return function (html) {
       parentNode.innerHTML = html;
     };
@@ -47,6 +50,7 @@ var html = domtagger({
 
   // how to handle cases where content
   // can only be some text
+  // The node is one that can only have text
   text: function (node) {
     return function (textContent) {
       node.textContent = textContent;
@@ -55,6 +59,7 @@ var html = domtagger({
 
   // OPTIONAL
   // a man in the middle for the output
+  // The html is what will be used to generate the content
   transform: function (html) {
     // it must return the eventually transformed html
     return html;
