@@ -53,3 +53,11 @@ try {
 } catch (error) {
   console.assert(error.message.length, 'valid error');
 }
+
+delete require.cache[require.resolve('../cjs/constants.js')];
+delete require.cache[require.resolve('../cjs/index.js')];
+delete require.cache[require.resolve('../cjs/sanitizer.js')];
+
+document.createElement = function () { return {}; };
+
+domtagger = require('../cjs').default;

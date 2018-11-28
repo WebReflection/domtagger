@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>domtagger</title>
-  <script src="../min.js"></script>
+  <script src="../index.js"></script>
   <script>
   this.onload = function () {
     var html = domtagger({
@@ -47,20 +47,26 @@
       }
     });
     window.render = function render(model) {
-      return html`
-        <div onclick=${model.onclick}>
-          <div>${model.html}</div>
-          <textarea>${model.text}</textarea>
-        </div>
-      `;
+      return html(
+        [
+          '<div onclick=',
+          '>\n<div>',
+          '</div>\n<textarea>',
+          '</textarea>\n</div>'
+        ],
+        model.onclick,
+        model.html,
+        model.text
+      );
     };
-    document.body.appendChild(render({
+    var model = {
       onclick: function (e) {
         alert(e.currentTarget.outerHTML);
       },
       html: 'Hello <strong>domtagger</strong>!',
       text: "isn't this cool?"
-    }));
+    };
+    document.body.appendChild(render(model));
   };
   </script>
 </head>
