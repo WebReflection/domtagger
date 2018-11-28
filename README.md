@@ -6,7 +6,7 @@
 
 Please note this module hasn't been even promoted yet, and it's being heavily tested.
 
-- - - 
+- - -
 
 The [hyperHTML](https://github.com/WebReflection/hyperHTML#hyperhtml)'s template literal parser, used to handle all repeated updates per each attribute or node.
 
