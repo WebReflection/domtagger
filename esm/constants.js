@@ -1,6 +1,6 @@
 // Custom
 var NOT_IE = 'content' in document.createElement('template');
-var UID = (NOT_IE ? '-' : '_dt: ') + Math.random().toFixed(6) + (NOT_IE ? '0%' : ';');
+var UID = (NOT_IE ? '-' : '_dt: ') + Math.random().toFixed(6) + (NOT_IE ? '%' : ';');
 //                                              ^ Edge issue ^
 var UIDC = '<!--' + UID + '-->';
 
