@@ -1,8 +1,15 @@
 'use strict';
 // Custom
-var NOT_IE = 'content' in document.createElement('template');
-var UID = (NOT_IE ? '-' : '_dt: ') + Math.random().toFixed(6) + (NOT_IE ? '%' : ';');
-//                                              ^ Edge issue ^
+var UID = '-' + Math.random().toFixed(6) + '%';
+//                           Edge issue!
+if (!(function (template, content, tabindex) {
+  return content in template && (
+    (template.innerHTML = '<p ' + tabindex + '="' + UID + '"></p>'),
+    template[content].childNodes[0].getAttribute(tabindex) == UID
+  );
+}(document.createElement('template'), 'content', 'tabindex'))) {
+  UID = '_dt: ' + UID.slice(1, -1) + ';';
+}
 var UIDC = '<!--' + UID + '-->';
 
 // DOM
