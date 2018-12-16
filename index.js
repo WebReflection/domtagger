@@ -76,7 +76,7 @@ var domtagger = (function (document) {
     function create(element) {
       return element === FRAGMENT ?
         document.createDocumentFragment() :
-        document.createElement(element);
+        document.createElementNS('http://www.w3.org/1999/xhtml', element);
     }
 
     // it could use createElementNS when hasNode is there
@@ -134,6 +134,10 @@ var domtagger = (function (document) {
     'createTextNode',
     'importNode'
   ));
+
+  var trim = ''.trim || function () {
+    return String(this).replace(/^\s+|\s+/g, '');
+  };
 
   // Custom
   var UID = '-' + Math.random().toFixed(6) + '%';
@@ -220,10 +224,6 @@ var domtagger = (function (document) {
     };
   }
   var Map$1 = self$1.Map;
-
-  var trim = ''.trim || function () {
-    return String(this).replace(/^\s+|\s+/g, '');
-  };
 
   function create(type, node, name) {
     return {type: type, name: name, node: node, path: createPath(node)};
@@ -377,6 +377,7 @@ var domtagger = (function (document) {
     if (transform)
       markup = transform(markup);
     var content = createContent(markup, options.type);
+    cleanContent(content);
     var holes = [];
     parse(content, holes, template.slice(0));
     var info = {
@@ -441,6 +442,20 @@ var domtagger = (function (document) {
       details.updates.apply(null, arguments);
       return details.content;
     };
+  }
+
+  function cleanContent(fragment) {
+    var childNodes = fragment.childNodes;
+    var i = childNodes.length;
+    while (i--) {
+      var child = childNodes[i];
+      if (
+        child.nodeType !== 1 &&
+        trim.call(child.textContent).length === 0
+      ) {
+        fragment.removeChild(child);
+      }
+    }
   }
 
   

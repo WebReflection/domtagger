@@ -4,6 +4,7 @@ import WeakMap from '@ungap/weakmap';
 // utils
 import createContent from '@ungap/create-content';
 import importNode from '@ungap/import-node';
+import trim from '@ungap/trim';
 
 // local
 import sanitize from './sanitizer.js';
@@ -21,6 +22,7 @@ function createInfo(options, template) {
   if (transform)
     markup = transform(markup);
   var content = createContent(markup, options.type);
+  cleanContent(content);
   var holes = [];
   parse(content, holes, template.slice(0));
   var info = {
@@ -85,4 +87,18 @@ function domtagger(options) {
     details.updates.apply(null, arguments);
     return details.content;
   };
+}
+
+function cleanContent(fragment) {
+  var childNodes = fragment.childNodes;
+  var i = childNodes.length;
+  while (i--) {
+    var child = childNodes[i];
+    if (
+      child.nodeType !== 1 &&
+      trim.call(child.textContent).length === 0
+    ) {
+      fragment.removeChild(child);
+    }
+  }
 }

@@ -5,6 +5,7 @@ const WeakMap = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* i
 // utils
 const createContent = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/create-content'));
 const importNode = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/import-node'));
+const trim = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/trim'));
 
 // local
 const sanitize = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('./sanitizer.js'));
@@ -22,6 +23,7 @@ function createInfo(options, template) {
   if (transform)
     markup = transform(markup);
   var content = createContent(markup, options.type);
+  cleanContent(content);
   var holes = [];
   parse(content, holes, template.slice(0));
   var info = {
@@ -86,4 +88,18 @@ function domtagger(options) {
     details.updates.apply(null, arguments);
     return details.content;
   };
+}
+
+function cleanContent(fragment) {
+  var childNodes = fragment.childNodes;
+  var i = childNodes.length;
+  while (i--) {
+    var child = childNodes[i];
+    if (
+      child.nodeType !== 1 &&
+      trim.call(child.textContent).length === 0
+    ) {
+      fragment.removeChild(child);
+    }
+  }
 }
