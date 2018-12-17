@@ -225,6 +225,8 @@ var domtagger = (function (document) {
   }
   var Map$1 = self$1.Map;
 
+  var index = -1;
+
   function create(type, node, name) {
     return {type: type, name: name, node: node, path: createPath(node)};
   }
@@ -263,7 +265,7 @@ var domtagger = (function (document) {
     var length = childNodes.length;
     var i = 0;
     while (i < length) {
-      var child = childNodes[i++];
+      var child = childNodes[index = i++];
       switch (child.nodeType) {
         case ELEMENT_NODE:
           parseAttributes(child, paths, parts);
@@ -363,7 +365,16 @@ var domtagger = (function (document) {
   }
 
   function prepend(path, parent, node) {
-    path.unshift(path.indexOf.call(parent.childNodes, node));
+    // the first index represent the node position
+    // after that, it needs to be found.
+    // this speeds up repeated holes on the same template literal
+    // avoiding accessing the childNodes when the index is already known
+    path.unshift(
+      index < 0 ?
+        path.indexOf.call(parent.childNodes, node) :
+        index
+    );
+    index = -1;
   }
 
   // globals
