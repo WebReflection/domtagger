@@ -237,6 +237,7 @@ var domtagger = (function (document) {
     switch (node.nodeType) {
       case ELEMENT_NODE:
       case DOCUMENT_FRAGMENT_NODE:
+        index = -1;
         parentNode = node;
         break;
       case COMMENT_NODE:
