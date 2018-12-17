@@ -112,7 +112,9 @@ function parseAttributes(node, paths, parts) {
                       /* istanbul ignore next */
                       attributes[realName.toLowerCase()];
         cache.set(name, value);
+        var currentIndex = index;
         paths.push(create('attr', value, realName));
+        index = currentIndex;
       }
       remove.push(attribute);
     }
