@@ -24,7 +24,7 @@ function createInfo(options, template) {
   var content = createContent(markup, options.type);
   cleanContent(content);
   var holes = [];
-  parse(content, holes, template.slice(0));
+  parse(content, holes, template.slice(0), []);
   var info = {
     content: content,
     updates: function (content) {
