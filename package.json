@@ -41,7 +41,6 @@
     "build": [
       "$ cjs",
       "$ clean.cjs index.js",
-      "$ clean.cjs utils.js",
       "$ clean.cjs walker.js",
       "$ bundle.max",
       "$ bundle.min",
@@ -86,7 +85,9 @@
     "@ungap/essential-map": "^0.1.7",
     "@ungap/import-node": "^0.1.0",
     "@ungap/trim": "^0.1.1",
-    "@ungap/weakmap": "^0.1.4"
+    "@ungap/weakmap": "^0.1.4",
+    "domconstants": "^0.1.1",
+    "domsanitizer": "^0.1.1"
   },
   "devDependencies": {
     "ascjs": "^3.0.1",

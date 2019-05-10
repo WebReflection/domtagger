@@ -139,17 +139,22 @@ var domtagger = (function (document) {
     return String(this).replace(/^\s+|\s+/g, '');
   };
 
+  /*! (c) Andrea Giammarchi - ISC */
+
   // Custom
   var UID = '-' + Math.random().toFixed(6) + '%';
-  //                           Edge issue!
-  if (!(function (template, content, tabindex) {
-    return content in template && (
-      (template.innerHTML = '<p ' + tabindex + '="' + UID + '"></p>'),
-      template[content].childNodes[0].getAttribute(tabindex) == UID
-    );
-  }(document.createElement('template'), 'content', 'tabindex'))) {
-    UID = '_dt: ' + UID.slice(1, -1) + ';';
-  }
+
+  try {
+    if (!(function (template, content, tabindex) {
+      return content in template && (
+        (template.innerHTML = '<p ' + tabindex + '="' + UID + '"></p>'),
+        template[content].childNodes[0].getAttribute(tabindex) == UID
+      );
+    }(document.createElement('template'), 'content', 'tabindex'))) {
+      UID = '_dt: ' + UID.slice(1, -1) + ';';
+    }
+  } catch(meh) {}
+
   var UIDC = '<!--' + UID + '-->';
 
   // DOM
@@ -159,6 +164,8 @@ var domtagger = (function (document) {
 
   var SHOULD_USE_TEXT_CONTENT = /^(?:style|textarea)$/i;
   var VOID_ELEMENTS = /^(?:area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)$/i;
+
+  /*! (c) Andrea Giammarchi - ISC */
 
   function sanitize (template) {
     return template.join(UIDC)

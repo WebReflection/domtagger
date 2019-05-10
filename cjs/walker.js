@@ -4,7 +4,7 @@ const trim = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* ista
 
 const {
   UID, UIDC, COMMENT_NODE, ELEMENT_NODE, SHOULD_USE_TEXT_CONTENT, TEXT_NODE
-} = require('./constants.js');
+} = require('domconstants');
 
 exports.find = find;
 exports.parse = parse;

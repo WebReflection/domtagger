@@ -5,9 +5,9 @@ import WeakMap from '@ungap/weakmap';
 import createContent from '@ungap/create-content';
 import importNode from '@ungap/import-node';
 import trim from '@ungap/trim';
+import sanitize from 'domsanitizer';
 
 // local
-import sanitize from './sanitizer.js';
 import {find, parse} from './walker.js';
 
 // the domtagger 🎉

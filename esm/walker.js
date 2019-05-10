@@ -7,7 +7,7 @@ import {
   ELEMENT_NODE,
   SHOULD_USE_TEXT_CONTENT,
   TEXT_NODE
-} from './constants.js';
+} from 'domconstants';
 
 export {find, parse};
 
