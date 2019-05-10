@@ -174,13 +174,13 @@ var domtagger = (function (document) {
   }
 
   var spaces = ' \\f\\n\\r\\t';
-  var almostEverything = '[^ ' + spaces + '\\/>"\'=]+';
-  var attrName = '[ ' + spaces + ']+' + almostEverything;
+  var almostEverything = '[^' + spaces + '\\/>"\'=]+';
+  var attrName = '[' + spaces + ']+' + almostEverything;
   var tagName = '<([A-Za-z]+[A-Za-z0-9:_-]*)((?:';
-  var attrPartials = '(?:\\s*=\\s*(?:\'[^\']*?\'|"[^"]*?"|<[^>]*?>|' + almostEverything + '))?)';
+  var attrPartials = '(?:\\s*=\\s*(?:\'[^\']*?\'|"[^"]*?"|<[^>]*?>|' + almostEverything.replace('\\/', '') + '))?)';
 
-  var attrSeeker = new RegExp(tagName + attrName + attrPartials + '+)([ ' + spaces + ']*/?>)', 'g');
-  var selfClosing = new RegExp(tagName + attrName + attrPartials + '*)([ ' + spaces + ']*/>)', 'g');
+  var attrSeeker = new RegExp(tagName + attrName + attrPartials + '+)([' + spaces + ']*/?>)', 'g');
+  var selfClosing = new RegExp(tagName + attrName + attrPartials + '*)([' + spaces + ']*/>)', 'g');
   var findAttributes = new RegExp('(' + attrName + '\\s*=\\s*)([\'"]?)' + UIDC + '\\2', 'gi');
 
   function attrReplacer($0, $1, $2, $3) {
