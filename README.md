@@ -81,9 +81,21 @@ document.body.appendChild(
 function render(model) {
   return html`
     <div onclick=${model.onclick}>
+      <!--/* html is sanitized as text automatically */-->
       <div>${model.html}</div>
+      <!--👻 textarea can use value=... or its content -->
       <textarea>${model.text}</textarea>
     </div>
   `;
 }
+```
+
+#### About devs-only comments
+
+If you'd like to create a dev only comment that will be removed at runtime once parsed, you can either start the comment with a ghost emoji 👻 or use `/*` and `*/` right at the boundaries of the comment.
+
+```html
+<!--👻 dev only -->
+<!--/* also dev only */-->
+<!-- any other regular comment -->
 ```

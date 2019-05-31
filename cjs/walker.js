@@ -34,7 +34,8 @@ function parse(node, holes, parts, path) {
         parse(child, holes, parts, childPath);
         break;
       case COMMENT_NODE:
-        if (child.textContent === UID) {
+        var textContent = child.textContent;
+        if (textContent === UID) {
           parts.shift();
           holes.push(
             // basicHTML or other non standard engines
@@ -44,6 +45,16 @@ function parse(node, holes, parts, path) {
               create('text', node, path) :
               create('any', child, path.concat(i))
           );
+        } else {
+          switch (textContent.slice(0, 2)) {
+            case '/*':
+              if (textContent.slice(-2) !== '*/')
+                break;
+            case '\uD83D\uDC7B': // ghost
+              node.removeChild(child);
+              i--;
+              length--;
+          }
         }
         break;
       case TEXT_NODE:

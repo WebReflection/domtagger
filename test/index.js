@@ -30,9 +30,15 @@ var content = domtagger(options)`
   <span id=${'drop'} />
   <script>window.alert('it works!');</script>
   <hr />
+  <!--/* still here -->
+  <!--/* hidden */-->
+  <!--👻 also hidden -->
 </div>`;
 
 console.assert(content.nodeType === 11);
+console.assert(-1 < content.firstChild.innerHTML.indexOf('<!--/* still here -->'));
+console.assert(-1 === content.firstChild.innerHTML.indexOf('<!--/* hidden */-->'));
+console.assert(-1 === content.firstChild.innerHTML.indexOf('<!--👻 also hidden -->'));
 
 options.transform = function (html) {
   return html.replace('<hr', '<br');
