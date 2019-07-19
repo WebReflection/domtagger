@@ -93,7 +93,7 @@
     "@ungap/trim": "^0.1.1",
     "@ungap/weakmap": "^0.1.4",
     "domconstants": "^0.1.1",
-    "domsanitizer": "^0.2.2"
+    "domsanitizer": "0.2.1"
   },
   "devDependencies": {
     "ascjs": "^3.0.1",
