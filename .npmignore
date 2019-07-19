@@ -6,3 +6,4 @@ _config.yml
 .gitignore
 .travis.yml
 package-lock.json
+rollup.config.js
