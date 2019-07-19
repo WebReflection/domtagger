@@ -143,6 +143,9 @@ var domtagger = (function (document) {
 
   // Custom
   var UID = '-' + Math.random().toFixed(6) + '%';
+  //                           Edge issue!
+
+  var UID_IE = false;
 
   try {
     if (!(function (template, content, tabindex) {
@@ -152,6 +155,7 @@ var domtagger = (function (document) {
       );
     }(document.createElement('template'), 'content', 'tabindex'))) {
       UID = '_dt: ' + UID.slice(1, -1) + ';';
+      UID_IE = true;
     }
   } catch(meh) {}
 
@@ -176,7 +180,7 @@ var domtagger = (function (document) {
   var spaces = ' \\f\\n\\r\\t';
   var almostEverything = '[^' + spaces + '\\/>"\'=]+';
   var attrName = '[' + spaces + ']+' + almostEverything;
-  var tagName = '<([A-Za-z]+[A-Za-z0-9:_-]*)((?:';
+  var tagName = '<([A-Za-z]+[A-Za-z0-9:._-]*)((?:';
   var attrPartials = '(?:\\s*=\\s*(?:\'[^\']*?\'|"[^"]*?"|<[^>]*?>|' + almostEverything.replace('\\/', '') + '))?)';
 
   var attrSeeker = new RegExp(tagName + attrName + attrPartials + '+)([' + spaces + ']*/?>)', 'g');
