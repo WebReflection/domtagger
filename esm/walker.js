@@ -87,20 +87,32 @@ function parseAttributes(node, holes, parts, path) {
   var i = 0;
   while (i < length) {
     var attribute = array[i++];
-    if (attribute.value === UID) {
+    var direct = attribute.value === UID;
+    var sparse;
+    if (direct || 1 < (sparse = attribute.value.split(UIDC)).length) {
       var name = attribute.name;
       // the following ignore is covered by IE
       // and the IE9 double viewBox test
       /* istanbul ignore else */
       if (!cache.has(name)) {
-        var realName = parts.shift().replace(/^(?:|[\S\s]*?\s)(\S+?)\s*=\s*['"]?$/, '$1');
+        var realName = parts.shift().replace(
+          /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?[^\2]*$/,
+          '$1'
+        );
         var value = attributes[realName] ||
                       // the following ignore is covered by browsers
                       // while basicHTML is already case-sensitive
                       /* istanbul ignore next */
                       attributes[realName.toLowerCase()];
         cache.set(name, value);
-        holes.push(create('attr', value, path, realName));
+        if (direct)
+          holes.push(create('attr', null, path, realName));
+        else {
+          var skip = sparse.length - 2;
+          while (skip--)
+            parts.shift();
+          holes.push(create('attr', sparse, path, realName));
+        }
       }
       remove.push(attribute);
     }
