@@ -92,8 +92,13 @@ function parseAttributes(node, holes, parts, path) {
       /* istanbul ignore else */
       if (!cache.has(name)) {
         var realName = parts.shift().replace(
-          /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?[^\2]*$/,
-          '$1'
+          direct ?
+            /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ :
+            new RegExp(
+              '^(?:|[\\S\\s]*?\\s)(' + name + ')\\s*=\\s*(\'|")',
+              'i'
+            ),
+            '$1'
         );
         var value = attributes[realName] ||
                       // the following ignore is covered by browsers
