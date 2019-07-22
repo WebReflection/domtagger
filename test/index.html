@@ -8,12 +8,12 @@
   <script src="../index.js"></script>
   <script>
   this.onload = function () {
-    var html = domtagger({
+    var options = {
       // can be html or svg
       type: 'html',
       // how to handle attributes
       // Note: this callback is simplified for demo purpose.
-      attribute: function (node, name, attribute) {
+      attribute: function (node, name) {
         return function (value) {
           var type = typeof value;
           if (type === 'boolean' || type === 'function')
@@ -45,7 +45,8 @@
         // it must return the eventually transformed html
         return html;
       }
-    });
+    };
+    var html = domtagger(options);
     window.render = function render(model) {
       return html(
         [
@@ -67,6 +68,28 @@
       text: "isn't this cool?"
     };
     document.body.appendChild(render(model));
+
+    try {
+      Function('options', `
+      document.body.appendChild(domtagger(options)\`
+      <div onclick=\${e => console.log(e.currentTarget)}>
+        <div>\${'html'}</div>
+        <!-- not related -->
+        <textarea attr = \${'another one'}>\${'text'}</textarea>
+        <textarea sparse="\${'a'}b\${'c'}">note related</textarea>
+        <span id=\${'drop'}>a</span>
+        <span class="some \${'class'}">\${'b'}</span>
+        <span class="\${'class'} some">\${'c'}</span>
+        <span class="some \${'class'} other" />
+        <span id=\${'ok'} />
+        <hr />
+        <!--/* still here -->
+        <!--/* hidden */-->
+        <!--👻 also hidden -->
+      </div>\`);
+      `)(options);
+    } catch (IE) {}
+
   };
   </script>
 </head>

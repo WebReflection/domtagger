@@ -26,7 +26,7 @@ var content = domtagger(options)`
   <div>${'html'}</div>
   <!-- not related -->
   <textarea attr = ${'another one'}>${'text'}</textarea>
-  <textarea>note related</textarea>
+  <textarea sparse="${'a'}b${'c'}">note related</textarea>
   <span id=${'drop'} />
   <script>window.alert('it works!');</script>
   <hr />
