@@ -40,8 +40,8 @@ function createInfo(options, template) {
             updates.push({fn: options.any(node, []), sparse: false});
             break;
           case 'attr':
-            var sparse = info.node;
-            var fn = options.attribute(node, info.name, sparse);
+            var sparse = info.sparse;
+            var fn = options.attribute(node, info.name, info.node);
             if (sparse === null)
               updates.push({fn: fn, sparse: false});
             else {

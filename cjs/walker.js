@@ -9,10 +9,6 @@ const {
 exports.find = find;
 exports.parse = parse;
 
-function create(type, node, path, name) {
-  return {name: name, node: node, path: path, type: type};
-}
-
 function find(node, path) {
   var length = path.length;
   var i = 0;
@@ -42,8 +38,8 @@ function parse(node, holes, parts, path) {
             // might end up having comments in nodes
             // where they shouldn't, hence this check.
             SHOULD_USE_TEXT_CONTENT.test(node.nodeName) ?
-              create('text', node, path) :
-              create('any', child, path.concat(i))
+              Text(node, path) :
+              Any(child, path.concat(i))
           );
         } else {
           switch (textContent.slice(0, 2)) {
@@ -68,7 +64,7 @@ function parse(node, holes, parts, path) {
           trim.call(child.textContent) === UIDC
         ) {
           parts.shift();
-          holes.push(create('text', node, path));
+          holes.push(Text(node, path));
         }
         break;
     }
@@ -104,12 +100,12 @@ function parseAttributes(node, holes, parts, path) {
                       attributes[realName.toLowerCase()];
         cache.set(name, value);
         if (direct)
-          holes.push(create('attr', null, path, realName));
+          holes.push(Attr(value, path, realName, null));
         else {
           var skip = sparse.length - 2;
           while (skip--)
             parts.shift();
-          holes.push(create('attr', sparse, path, realName));
+          holes.push(Attr(value, path, realName, sparse));
         }
       }
       remove.push(attribute);
@@ -148,4 +144,30 @@ function parseAttributes(node, holes, parts, path) {
     script.textContent = node.textContent;
     node.parentNode.replaceChild(script, node);
   }
+}
+
+function Any(node, path) {
+  return {
+    type: 'any',
+    node: node,
+    path: path
+  };
+}
+
+function Attr(node, path, name, sparse) {
+  return {
+    type: 'attr',
+    node: node,
+    path: path,
+    name: name,
+    sparse: sparse
+  };
+}
+
+function Text(node, path) {
+  return {
+    type: 'text',
+    node: node,
+    path: path
+  };
 }

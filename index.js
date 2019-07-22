@@ -235,10 +235,6 @@ var domtagger = (function (document) {
   }
   var Map$1 = self$1.Map;
 
-  function create(type, node, path, name) {
-    return {name: name, node: node, path: path, type: type};
-  }
-
   function find(node, path) {
     var length = path.length;
     var i = 0;
@@ -268,8 +264,8 @@ var domtagger = (function (document) {
               // might end up having comments in nodes
               // where they shouldn't, hence this check.
               SHOULD_USE_TEXT_CONTENT.test(node.nodeName) ?
-                create('text', node, path) :
-                create('any', child, path.concat(i))
+                Text(node, path) :
+                Any(child, path.concat(i))
             );
           } else {
             switch (textContent.slice(0, 2)) {
@@ -294,7 +290,7 @@ var domtagger = (function (document) {
             trim.call(child.textContent) === UIDC
           ) {
             parts.shift();
-            holes.push(create('text', node, path));
+            holes.push(Text(node, path));
           }
           break;
       }
@@ -330,12 +326,12 @@ var domtagger = (function (document) {
                         attributes[realName.toLowerCase()];
           cache.set(name, value);
           if (direct)
-            holes.push(create('attr', null, path, realName));
+            holes.push(Attr(value, path, realName, null));
           else {
             var skip = sparse.length - 2;
             while (skip--)
               parts.shift();
-            holes.push(create('attr', sparse, path, realName));
+            holes.push(Attr(value, path, realName, sparse));
           }
         }
         remove.push(attribute);
@@ -376,6 +372,32 @@ var domtagger = (function (document) {
     }
   }
 
+  function Any(node, path) {
+    return {
+      type: 'any',
+      node: node,
+      path: path
+    };
+  }
+
+  function Attr(node, path, name, sparse) {
+    return {
+      type: 'attr',
+      node: node,
+      path: path,
+      name: name,
+      sparse: sparse
+    };
+  }
+
+  function Text(node, path) {
+    return {
+      type: 'text',
+      node: node,
+      path: path
+    };
+  }
+
   // globals
 
   var parsed = new WeakMap$1;
@@ -405,8 +427,8 @@ var domtagger = (function (document) {
               updates.push({fn: options.any(node, []), sparse: false});
               break;
             case 'attr':
-              var sparse = info.node;
-              var fn = options.attribute(node, info.name, sparse);
+              var sparse = info.sparse;
+              var fn = options.attribute(node, info.name, info.node);
               if (sparse === null)
                 updates.push({fn: fn, sparse: false});
               else {
