@@ -59,10 +59,23 @@ var html = domtagger({
 
   // OPTIONAL
   // a man in the middle for the output
-  // The html is what will be used to generate the content
+  // The html string is what will be used to generate the content
+  // this is always invoked after sanitizing the template parts
   transform: function (html) {
     // it must return the eventually transformed html
     return html;
+  },
+
+  // for adventurous 3rd parts libraries only:
+  // it will run before transform and it must return a *string*
+  // that contains domconstants.UID/UIDC in the right place
+  // or the whole library will break
+  sanitize: function (template) {
+    // see domsanitizer logic
+    // https://github.com/WebReflection/domsanitizer/blob/master/esm/index.js
+    // or see a possible wrap solution/hint/workaround
+    // https://github.com/WebReflection/domtagger/issues/17#issuecomment-526151473
+    return template.join(domconstants.UIDC).replace(sani, tize);
   }
 
 });
