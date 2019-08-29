@@ -18,7 +18,7 @@ var parsed = new WeakMap;
 var referenced = new WeakMap;
 
 function createInfo(options, template) {
-  var markup = (options.sanitize || sanitize)(template);
+  var markup = (options.convert || sanitize)(template);
   var transform = options.transform;
   if (transform)
     markup = transform(markup);

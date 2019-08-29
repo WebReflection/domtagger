@@ -417,7 +417,7 @@ var domtagger = (function (document) {
   var referenced = new WeakMap$1;
 
   function createInfo(options, template) {
-    var markup = (options.sanitize || sanitize)(template);
+    var markup = (options.convert || sanitize)(template);
     var transform = options.transform;
     if (transform)
       markup = transform(markup);

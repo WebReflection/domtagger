@@ -67,10 +67,11 @@ var html = domtagger({
   },
 
   // for adventurous 3rd parts libraries only:
+  // previously internally known as `sanitize`,
   // it will run before transform and it must return a *string*
   // that contains domconstants.UID/UIDC in the right place
   // or the whole library will break
-  sanitize: function (template) {
+  convert: function (template) {
     // see domsanitizer logic
     // https://github.com/WebReflection/domsanitizer/blob/master/esm/index.js
     // or see a possible wrap solution/hint/workaround
