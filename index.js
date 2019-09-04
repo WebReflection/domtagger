@@ -360,7 +360,7 @@ var domtagger = (function (document) {
     i = 0;
 
     /* istanbul ignore next */
-    var cleanValue = 0 < length && UID_IE && !(OWNER_SVG_ELEMENT in node);
+    var cleanValue = 0 < length && UID_IE && !('ownerSVGElement' in node);
     while (i < length) {
       // Edge HTML bug #16878726
       var attr = remove[i++];
