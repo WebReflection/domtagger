@@ -326,6 +326,12 @@ var domtagger = (function (document) {
           var realName = parts.shift().replace(
             direct ?
               /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ :
+              // TODO: while working on yet another IE/Edge bug I've realized
+              //        the current not direct logic easily breaks there
+              //        because the `name` might not be the real needed one.
+              //        Use a better RegExp to find last attribute instead
+              //        of trusting `name` is what we are looking for.
+              //        Thanks IE/Edge, I hate you both.
               new RegExp(
                 '^(?:|[\\S\\s]*?\\s)(' + name + ')\\s*=\\s*(\'|")',
                 'i'
@@ -357,11 +363,11 @@ var domtagger = (function (document) {
       var attr = remove[i++];
       // IE/Edge bug lighterhtml#63
       attr.value = '';
-      if (/^id$/i.test(attr.name))
-        node.removeAttribute(attr.name);
-      // standard browsers would work just fine here
-      else
-        node.removeAttributeNode(attr);
+      // IE/Edge bug lighterhtml#64
+      // it used to check for id special attribute (only)
+      // and fallback to removeAttributeNode because IE/Edge
+      // have completely broken attributes logic ...
+      node.removeAttribute(attr.name);
     }
 
     // This is a very specific Firefox/Safari issue
