@@ -3,7 +3,7 @@ const Map = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istan
 const trim = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/trim'));
 
 const {
-  UID, UIDC, COMMENT_NODE, ELEMENT_NODE, SHOULD_USE_TEXT_CONTENT, TEXT_NODE
+  UID, UIDC, UID_IE, COMMENT_NODE, ELEMENT_NODE, SHOULD_USE_TEXT_CONTENT, TEXT_NODE
 } = require('domconstants');
 
 exports.find = find;
@@ -124,15 +124,17 @@ function parseAttributes(node, holes, parts, path) {
   }
   length = remove.length;
   i = 0;
+
+  /* istanbul ignore next */
+  var cleanValue = 0 < length && UID_IE && !(OWNER_SVG_ELEMENT in node);
   while (i < length) {
     // Edge HTML bug #16878726
     var attr = remove[i++];
-    // IE/Edge bug lighterhtml#63
-    attr.value = '';
-    // IE/Edge bug lighterhtml#64
-    // it used to check for id special attribute (only)
-    // and fallback to removeAttributeNode because IE/Edge
-    // have completely broken attributes logic ...
+    // IE/Edge bug lighterhtml#63 - clean the value or it'll persist
+    /* istanbul ignore next */
+    if (cleanValue)
+      attr.value = '';
+    // IE/Edge bug lighterhtml#64 - don't use removeAttributeNode
     node.removeAttribute(attr.name);
   }
 
