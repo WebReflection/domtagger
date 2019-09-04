@@ -355,6 +355,8 @@ var domtagger = (function (document) {
     while (i < length) {
       // Edge HTML bug #16878726
       var attr = remove[i++];
+      // IE/Edge bug lighterhtml#63
+      attr.value = '';
       if (/^id$/i.test(attr.name))
         node.removeAttribute(attr.name);
       // standard browsers would work just fine here
