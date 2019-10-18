@@ -333,7 +333,7 @@ var domtagger = (function (document) {
               //        of trusting `name` is what we are looking for.
               //        Thanks IE/Edge, I hate you both.
               new RegExp(
-                '^(?:|[\\S\\s]*?\\s)(' + name + ')\\s*=\\s*(\'|")',
+                '^(?:|[\\S\\s]*?\\s)(' + name + ')\\s*=\\s*(\'|")[\\S\\s]*',
                 'i'
               ),
               '$1'
