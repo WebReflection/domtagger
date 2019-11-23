@@ -10,6 +10,8 @@ var options = {
     }
   },
   any(node) {
+    if (node.nodeType === 8)
+      node = node.parentNode;
     return html => {
       node.innerHTML = html;
     };
@@ -34,6 +36,8 @@ var content = domtagger(options)`
   <!--/* hidden */-->
   <!--👻 also hidden -->
 </div>`;
+
+console.log(content.firstChild.outerHTML);
 
 console.assert(content.nodeType === 11);
 console.assert(-1 < content.firstChild.innerHTML.indexOf('<!--/* still here -->'));
