@@ -243,6 +243,19 @@ var domtagger = (function (document) {
   }
   var Map$1 = self$1.Map;
 
+  /* istanbul ignore next */
+  var normalizeAttributes = UID_IE ?
+    function (attributes, parts) {
+      var html = parts.join(' ');
+      return parts.slice.call(attributes, 0).sort(function (left, right) {
+        return html.indexOf(left.name) <= html.indexOf(right.name) ? -1 : 1;
+      });
+    } :
+    function (attributes, parts) {
+      return parts.slice.call(attributes, 0);
+    }
+  ;
+
   function find(node, path) {
     var length = path.length;
     var i = 0;
@@ -310,7 +323,7 @@ var domtagger = (function (document) {
     var cache = new Map$1;
     var attributes = node.attributes;
     var remove = [];
-    var array = remove.slice.call(attributes, 0);
+    var array = normalizeAttributes(attributes, parts);
     var length = array.length;
     var i = 0;
     while (i < length) {
@@ -326,12 +339,6 @@ var domtagger = (function (document) {
           var realName = parts.shift().replace(
             direct ?
               /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ :
-              // TODO: while working on yet another IE/Edge bug I've realized
-              //        the current not direct logic easily breaks there
-              //        because the `name` might not be the real needed one.
-              //        Use a better RegExp to find last attribute instead
-              //        of trusting `name` is what we are looking for.
-              //        Thanks IE/Edge, I hate you both.
               new RegExp(
                 '^(?:|[\\S\\s]*?\\s)(' + name + ')\\s*=\\s*(\'|")[\\S\\s]*',
                 'i'
