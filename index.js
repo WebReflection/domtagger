@@ -199,50 +199,6 @@ var domtagger = (function (document) {
     return VOID_ELEMENTS.test($1) ? $0 : ('<' + $1 + $2 + '></' + $1 + '>');
   }
 
-  /*! (c) Andrea Giammarchi - ISC */
-  var self$1 = null || /* istanbul ignore next */ {};
-  try { self$1.Map = Map; }
-  catch (Map) {
-    self$1.Map = function Map() {
-      var i = 0;
-      var k = [];
-      var v = [];
-      return {
-        delete: function (key) {
-          var had = contains(key);
-          if (had) {
-            k.splice(i, 1);
-            v.splice(i, 1);
-          }
-          return had;
-        },
-        forEach: function forEach(callback, context) {
-          k.forEach(
-            function (key, i)  {
-              callback.call(context, v[i], key, this);
-            },
-            this
-          );
-        },
-        get: function get(key) {
-          return contains(key) ? v[i] : void 0;
-        },
-        has: function has(key) {
-          return contains(key);
-        },
-        set: function set(key, value) {
-          v[contains(key) ? i : (k.push(key) - 1)] = value;
-          return this;
-        }
-      };
-      function contains(v) {
-        i = k.indexOf(v);
-        return -1 < i;
-      }
-    };
-  }
-  var Map$1 = self$1.Map;
-
   /* istanbul ignore next */
   var normalizeAttributes = UID_IE ?
     function (attributes, parts) {
@@ -320,8 +276,8 @@ var domtagger = (function (document) {
   }
 
   function parseAttributes(node, holes, parts, path) {
-    var cache = new Map$1;
     var attributes = node.attributes;
+    var cache = [];
     var remove = [];
     var array = normalizeAttributes(attributes, parts);
     var length = array.length;
@@ -335,7 +291,8 @@ var domtagger = (function (document) {
         // the following ignore is covered by IE
         // and the IE9 double viewBox test
         /* istanbul ignore else */
-        if (!cache.has(name)) {
+        if (cache.indexOf(name) < 0) {
+          cache.push(name);
           var realName = parts.shift().replace(
             direct ?
               /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ :
@@ -350,7 +307,6 @@ var domtagger = (function (document) {
                         // while basicHTML is already case-sensitive
                         /* istanbul ignore next */
                         attributes[realName.toLowerCase()];
-          cache.set(name, value);
           if (direct)
             holes.push(Attr(value, path, realName, null));
           else {
@@ -431,7 +387,6 @@ var domtagger = (function (document) {
   // globals
 
   var parsed = new WeakMap$1;
-  var referenced = new WeakMap$1;
 
   function createInfo(options, template) {
     var markup = (options.convert || sanitize)(template);
@@ -508,23 +463,17 @@ var domtagger = (function (document) {
 
   function createDetails(options, template) {
     var info = parsed.get(template) || createInfo(options, template);
-    var content = importNode.call(document, info.content, true);
-    var details = {
-      content: content,
-      template: template,
-      updates: info.updates(content)
-    };
-    referenced.set(options, details);
-    return details;
+    return info.updates(importNode.call(document, info.content, true));
   }
 
+  var empty = [];
   function domtagger(options) {
+    var previous = empty;
+    var updates = cleanContent;
     return function (template) {
-      var details = referenced.get(options);
-      if (details == null || details.template !== template)
-        details = createDetails(options, template);
-      details.updates.apply(null, arguments);
-      return details.content;
+      if (previous !== template)
+        updates = createDetails(options, (previous = template));
+      return updates.apply(null, arguments);
     };
   }
 

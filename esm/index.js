@@ -14,7 +14,6 @@ import {find, parse} from './walker.js';
 export default domtagger;
 
 var parsed = new WeakMap;
-var referenced = new WeakMap;
 
 function createInfo(options, template) {
   var markup = (options.convert || sanitize)(template);
@@ -91,23 +90,17 @@ function createInfo(options, template) {
 
 function createDetails(options, template) {
   var info = parsed.get(template) || createInfo(options, template);
-  var content = importNode.call(document, info.content, true);
-  var details = {
-    content: content,
-    template: template,
-    updates: info.updates(content)
-  };
-  referenced.set(options, details);
-  return details;
+  return info.updates(importNode.call(document, info.content, true));
 }
 
+var empty = [];
 function domtagger(options) {
+  var previous = empty;
+  var updates = cleanContent;
   return function (template) {
-    var details = referenced.get(options);
-    if (details == null || details.template !== template)
-      details = createDetails(options, template);
-    details.updates.apply(null, arguments);
-    return details.content;
+    if (previous !== template)
+      updates = createDetails(options, (previous = template));
+    return updates.apply(null, arguments);
   };
 }
 

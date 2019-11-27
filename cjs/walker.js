@@ -1,5 +1,4 @@
 'use strict';
-const Map = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/essential-map'));
 const trim = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/trim'));
 
 const {
@@ -86,8 +85,8 @@ function parse(node, holes, parts, path) {
 }
 
 function parseAttributes(node, holes, parts, path) {
-  var cache = new Map;
   var attributes = node.attributes;
+  var cache = [];
   var remove = [];
   var array = normalizeAttributes(attributes, parts);
   var length = array.length;
@@ -101,7 +100,8 @@ function parseAttributes(node, holes, parts, path) {
       // the following ignore is covered by IE
       // and the IE9 double viewBox test
       /* istanbul ignore else */
-      if (!cache.has(name)) {
+      if (cache.indexOf(name) < 0) {
+        cache.push(name);
         var realName = parts.shift().replace(
           direct ?
             /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ :
@@ -116,7 +116,6 @@ function parseAttributes(node, holes, parts, path) {
                       // while basicHTML is already case-sensitive
                       /* istanbul ignore next */
                       attributes[realName.toLowerCase()];
-        cache.set(name, value);
         if (direct)
           holes.push(Attr(value, path, realName, null));
         else {
