@@ -100,8 +100,8 @@
     "coveralls": "^3.0.9",
     "istanbul": "^0.4.5",
     "npm-dollar": "^2.2.1",
-    "rollup": "^1.27.5",
+    "rollup": "^1.27.9",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "uglify-js": "^3.7.0"
+    "uglify-js": "^3.7.1"
   }
 }
