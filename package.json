@@ -1,6 +1,6 @@
 {
   "name": "domtagger",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "The hyperHTML's template literal parser",
   "main": "cjs/index.js",
   "module": "esm/index.js",
