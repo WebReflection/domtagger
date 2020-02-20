@@ -96,7 +96,7 @@
   },
   "devDependencies": {
     "ascjs": "^3.1.2",
-    "basichtml": "^1.1.2",
+    "basichtml": "^2.0.0",
     "coveralls": "^3.0.9",
     "istanbul": "^0.4.5",
     "npm-dollar": "^2.2.1",
