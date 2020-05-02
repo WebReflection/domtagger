@@ -87,7 +87,7 @@
     ]
   },
   "dependencies": {
-    "@ungap/create-content": "^0.1.4",
+    "@ungap/create-content": "^0.2.0",
     "@ungap/import-node": "^0.1.0",
     "@ungap/trim": "^0.1.1",
     "@ungap/weakmap": "^0.1.4",
