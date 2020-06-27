@@ -2,9 +2,7 @@ var domtagger = (function (document) {
   'use strict';
 
   /*! (c) Andrea Giammarchi - ISC */
-  var self = null ||
-  /* istanbul ignore next */
-  {};
+  var self = {};
 
   try {
     self.WeakMap = WeakMap;
@@ -59,7 +57,7 @@ var domtagger = (function (document) {
 
     var FRAGMENT = 'fragment';
     var TEMPLATE = 'template';
-    var HAS_CONTENT = 'content' in create(TEMPLATE);
+    var HAS_CONTENT = ('content' in create(TEMPLATE));
     var createHTML = HAS_CONTENT ? function (html) {
       var template = create(TEMPLATE);
       template.innerHTML = html;
@@ -111,28 +109,36 @@ var domtagger = (function (document) {
 
   /*! (c) Andrea Giammarchi - ISC */
   var importNode = function (document, appendChild, cloneNode, createTextNode, importNode) {
-    var _native = importNode in document; // IE 11 has problems with cloning templates:
+    var _native = (importNode in document); // IE 11 has problems with cloning templates:
     // it "forgets" empty childNodes. This feature-detects that.
 
 
     var fragment = document.createDocumentFragment();
     fragment[appendChild](document[createTextNode]('g'));
     fragment[appendChild](document[createTextNode](''));
+    /* istanbul ignore next */
+
     var content = _native ? document[importNode](fragment, true) : fragment[cloneNode](true);
     return content.childNodes.length < 2 ? function importNode(node, deep) {
       var clone = node[cloneNode]();
 
-      for (var childNodes = node.childNodes || [], length = childNodes.length, i = 0; deep && i < length; i++) {
+      for (var
+      /* istanbul ignore next */
+      childNodes = node.childNodes || [], length = childNodes.length, i = 0; deep && i < length; i++) {
         clone[appendChild](importNode(childNodes[i], deep));
       }
 
       return clone;
-    } : _native ? document[importNode] : function (node, deep) {
+    } :
+    /* istanbul ignore next */
+    _native ? document[importNode] : function (node, deep) {
       return node[cloneNode](!!deep);
     };
   }(document, 'appendChild', 'cloneNode', 'createTextNode', 'importNode');
 
-  var trim = ''.trim || function () {
+  var trim = ''.trim ||
+  /* istanbul ignore next */
+  function () {
     return String(this).replace(/^\s+|\s+/g, '');
   };
 

@@ -21,7 +21,7 @@
       "min": [
         [
           "echo \"/*! (c) Andrea Giammarchi - ISC */$(",
-          "uglifyjs index.js --support-ie8 -c -m",
+          "uglifyjs index.js -c -m",
           ")\" > min.js"
         ]
       ],
@@ -87,25 +87,25 @@
     ]
   },
   "dependencies": {
-    "@ungap/create-content": "^0.1.4",
-    "@ungap/import-node": "^0.1.0",
-    "@ungap/trim": "^0.1.1",
-    "@ungap/weakmap": "^0.1.4",
+    "@ungap/create-content": "^0.2.0",
+    "@ungap/import-node": "^0.2.0",
+    "@ungap/trim": "^0.2.0",
+    "@ungap/weakmap": "^0.2.1",
     "domconstants": "^0.1.1",
     "domsanitizer": "^0.2.2",
     "umap": "^1.0.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.8.7",
-    "@babel/preset-env": "^7.8.7",
-    "ascjs": "^3.1.2",
-    "basichtml": "^2.1.4",
-    "coveralls": "^3.0.9",
+    "@babel/core": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
+    "ascjs": "^4.0.1",
+    "basichtml": "^2.3.0",
+    "coveralls": "^3.1.0",
     "istanbul": "^0.4.5",
     "npm-dollar": "^2.2.1",
-    "rollup": "^2.0.6",
+    "rollup": "^2.18.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "uglify-js": "^3.8.0"
+    "uglify-js": "^3.10.0"
   }
 }
