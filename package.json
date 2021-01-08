@@ -91,7 +91,7 @@
     "@ungap/import-node": "^0.2.0",
     "@ungap/trim": "^0.2.0",
     "@ungap/weakmap": "^0.2.1",
-    "domconstants": "^0.1.1",
+    "domconstants": "^0.1.2",
     "domsanitizer": "^0.2.2",
     "umap": "^1.0.2"
   },
