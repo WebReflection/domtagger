@@ -1,11 +1,7 @@
 'use strict';
-// globals
-const WeakMap = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/weakmap'));
-
 // utils
 const createContent = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/create-content'));
 const importNode = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/import-node'));
-const trim = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('@ungap/trim'));
 const sanitize = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('domsanitizer'));
 const umap = (m => m.__esModule ? /* istanbul ignore next */ m.default : /* istanbul ignore next */ m)(require('umap'));
 
@@ -27,8 +23,8 @@ function createInfo(options, template) {
   var holes = [];
   parse(content, holes, template.slice(0), []);
   return {
-    content: content,
-    updates: function (content) {
+    content,
+    updates (content) {
       var updates = [];
       var len = holes.length;
       var i = 0;
@@ -111,7 +107,7 @@ function cleanContent(fragment) {
     var child = childNodes[i];
     if (
       child.nodeType !== 1 &&
-      trim.call(child.textContent).length === 0
+      child.textContent.trim().length === 0
     ) {
       fragment.removeChild(child);
     }

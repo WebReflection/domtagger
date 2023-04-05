@@ -1,10 +1,6 @@
-// globals
-import WeakMap from '@ungap/weakmap';
-
 // utils
 import createContent from '@ungap/create-content';
 import importNode from '@ungap/import-node';
-import trim from '@ungap/trim';
 import sanitize from 'domsanitizer';
 import umap from 'umap';
 
@@ -26,8 +22,8 @@ function createInfo(options, template) {
   var holes = [];
   parse(content, holes, template.slice(0), []);
   return {
-    content: content,
-    updates: function (content) {
+    content,
+    updates (content) {
       var updates = [];
       var len = holes.length;
       var i = 0;
@@ -110,7 +106,7 @@ function cleanContent(fragment) {
     var child = childNodes[i];
     if (
       child.nodeType !== 1 &&
-      trim.call(child.textContent).length === 0
+      child.textContent.trim().length === 0
     ) {
       fragment.removeChild(child);
     }

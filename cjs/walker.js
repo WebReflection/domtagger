@@ -170,25 +170,25 @@ function parseAttributes(node, holes, parts, path) {
 function Any(node, path) {
   return {
     type: 'any',
-    node: node,
-    path: path
+    node,
+    path
   };
 }
 
 function Attr(node, path, name, sparse) {
   return {
     type: 'attr',
-    node: node,
-    path: path,
-    name: name,
-    sparse: sparse
+    node,
+    path,
+    name,
+    sparse
   };
 }
 
 function Text(node, path) {
   return {
     type: 'text',
-    node: node,
-    path: path
+    node,
+    path
   };
 }
